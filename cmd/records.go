@@ -36,11 +36,15 @@ func init() {
 	recordsCmd.Flags().StringVarP(&domain, "domainID", "d", "", "Domain ID")
 	recordsCmd.AddCommand(createRecordsCmd)
 	recordsCmd.AddCommand(updateRecordsCmd)
+	recordsCmd.AddCommand(deleteRecordsCmd)
 
 	createRecordsCmd.Flags().StringVarP(&domain, "domainID", "d", "", "Domain ID")
 
 	updateRecordsCmd.Flags().StringVarP(&domain, "domainID", "d", "", "Domain ID")
 	updateRecordsCmd.Flags().StringVarP(&recordID, "recordID", "r", "", "Record ID")
+
+	deleteRecordsCmd.Flags().StringVarP(&domain, "domainID", "d", "", "Domain ID")
+	deleteRecordsCmd.Flags().StringVarP(&recordID, "recordID", "r", "", "Record ID")
 }
 
 //{"name":"www","type":"A","value":"1.1.1.1","id":"57181329","gtdLocation":"DEFAULT","ttl":86400}
@@ -128,6 +132,27 @@ var updateRecordsCmd = &cobra.Command{
 		}
 
 		err := doRequest("PUT", "/dns/managed/"+domain+"/records/"+recordID, r)
+		if err != nil {
+			fmt.Println(err)
+		}
+	},
+}
+
+var deleteRecordsCmd = &cobra.Command{
+	Use:   "delete",
+	Short: "Delete a record",
+	Run: func(cmd *cobra.Command, args []string) {
+
+		if domain == "" {
+			fmt.Println("Domain (-d) is required")
+			os.Exit(1)
+		}
+		if recordID == "" {
+			fmt.Println("Record (-r) is required")
+			os.Exit(1)
+		}
+
+		err := doRequest("DELETE", "/dns/managed/"+domain+"/records/"+recordID, nil)
 		if err != nil {
 			fmt.Println(err)
 		}

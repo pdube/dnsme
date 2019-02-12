@@ -44,3 +44,9 @@ dnsme records create -d 12345 HOSTNAME IP_ADDRESS
 ```bash
 dnsme records update -d 12345 -r 67890 HOSTNAME IP_ADDRESS
 ```
+
+### Delete record in domain
+
+```bash
+dnsme records delete -d 12345 -r 67890
+```
